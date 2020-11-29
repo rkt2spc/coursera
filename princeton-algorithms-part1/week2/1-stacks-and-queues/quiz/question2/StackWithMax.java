@@ -1,14 +1,14 @@
 import java.util.Stack;
 
 class StackWithMax {
-  public static interface Stack<T extends Comparable> {
+  public static interface Stack<T extends Comparable<? super T>> {
     public void push(T item);
     public T pop();
     public T max();
     public boolean isEmpty();
   }
 
-  public static class MyStack<T extends Comparable> implements Stack<T> {
+  public static class MyStack<T extends Comparable<? super T>> implements Stack<T> {
     java.util.Stack<T> s1 = new java.util.Stack<T>();
     java.util.Stack<T> s2 = new java.util.Stack<T>();
 
