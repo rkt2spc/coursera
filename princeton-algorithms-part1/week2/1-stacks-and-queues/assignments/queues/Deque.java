@@ -2,13 +2,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
-  @SuppressWarnings("unchecked")
-  private Item[] elements = (Item[])new Object[8];
+  private static final int MIN_INITIAL_SIZE = 8;
+  private Item[] elements = (Item[]) new Object[MIN_INITIAL_SIZE];
   private int head = 0;
   private int tail = 0;
 
   // construct an empty deque
-  public Deque() {}
+  public Deque() {
+  }
 
   // is the deque empty?
   public boolean isEmpty() {
@@ -60,7 +61,7 @@ public class Deque<Item> implements Iterable<Item> {
 
   private class DequeIterator implements Iterator<Item> {
     private int cursor = head;
-    private int fence = tail;
+    private final int fence = tail;
 
     // Checks if the next element exists
     public boolean hasNext() {
@@ -86,9 +87,8 @@ public class Deque<Item> implements Iterable<Item> {
     return new DequeIterator();
   }
 
-  @SuppressWarnings("unchecked")
   private void doubleCapacity() {
-    if (head != tail) throw new IllegalStateException("Deque must be full before resizing");
+    if (head != tail) throw new IllegalStateException("Deque must be full before up-sizing");
     int p = head;
     int n = elements.length;
     int r = n - p; // number of elements to the right of p
@@ -98,7 +98,7 @@ public class Deque<Item> implements Iterable<Item> {
     Object[] a = new Object[newCapacity];
     System.arraycopy(elements, p, a, 0, r);
     System.arraycopy(elements, 0, a, r, p);
-    elements = (Item[])a;
+    elements = (Item[]) a;
     head = 0;
     tail = n;
   }
@@ -115,7 +115,7 @@ public class Deque<Item> implements Iterable<Item> {
     d.addLast(0);
     System.out.println(d.removeLast());
 
-    for(Integer item: d) {
+    for (Integer item: d) {
       System.out.println(item);
     }
     while (!d.isEmpty()) System.out.println(d.removeFirst());

@@ -1,13 +1,16 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class RandomizedQueue<Item> implements Iterable<Item> {
-  @SuppressWarnings("unchecked")
+// Uncomment to submit
+// import edu.princeton.cs.algs4.StdRandom;
+
+public class RandomizedQueue<Item> implements Iterable<Item> {
   private Item[] elements = (Item[]) new Object[8];
   private int size = 0;
 
   // construct an empty randomized queue
-  public RandomizedQueue() {}
+  public RandomizedQueue() {
+  }
 
   // is the randomized queue empty?
   public boolean isEmpty() {
@@ -42,12 +45,14 @@ class RandomizedQueue<Item> implements Iterable<Item> {
 
   // return a random item (but do not remove it)
   public Item sample() {
+    if (isEmpty()) throw new NoSuchElementException("Queue is empty");
+
     return elements[StdRandom.uniform(0, size)];
   }
 
   private class QueueIterator implements Iterator<Item> {
     private int it = 0;
-    private int[] traverseIdx;
+    private final int[] traverseIdx;
 
     public QueueIterator() {
       traverseIdx = new int[size];
@@ -79,7 +84,6 @@ class RandomizedQueue<Item> implements Iterable<Item> {
     return new QueueIterator();
   }
 
-  @SuppressWarnings("unchecked")
   private void doubleCapacity() {
     if (size < elements.length) throw new IllegalStateException("Queue must be full before resizing");
 
@@ -88,7 +92,7 @@ class RandomizedQueue<Item> implements Iterable<Item> {
 
     Object[] a = new Object[newCapacity];
     System.arraycopy(elements, 0, a, 0, elements.length);
-    elements = (Item[])a;
+    elements = (Item[]) a;
   }
 
   // unit testing (required)
@@ -103,7 +107,7 @@ class RandomizedQueue<Item> implements Iterable<Item> {
     q.enqueue(2);
     q.enqueue(3);
     q.enqueue(4);
-    for(Integer item: q) {
+    for (Integer item: q) {
       System.out.println(item);
     }
     while (!q.isEmpty()) System.out.println(q.dequeue());
