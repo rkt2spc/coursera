@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-class QueueWith2Stacks {
+public class QueueWith2Stacks {
   public static interface IQueue<T> {
     public void enqueue(T item);
     public T dequeue();

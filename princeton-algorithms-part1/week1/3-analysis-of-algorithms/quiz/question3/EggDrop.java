@@ -1,6 +1,6 @@
 import java.util.*;
 
-class EggDrop {
+public class EggDrop {
   public static class Problem {
     public int T;
     public int n;

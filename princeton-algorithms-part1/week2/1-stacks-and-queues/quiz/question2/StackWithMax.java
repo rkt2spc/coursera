@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-class StackWithMax {
+public class StackWithMax {
   public static interface Stack<T extends Comparable<? super T>> {
     public void push(T item);
     public T pop();

@@ -1,6 +1,6 @@
 import java.util.*;
 
-class ThreeSum {
+public class ThreeSum {
   public static class Problem {
     public int[] nums;
     public Problem(int[] nums) {

@@ -1,6 +1,6 @@
 import java.util.*;
 
-class SearchBitonicArray {
+public class SearchBitonicArray {
   public static class Problem {
     public int[] nums;
     public int peak;
