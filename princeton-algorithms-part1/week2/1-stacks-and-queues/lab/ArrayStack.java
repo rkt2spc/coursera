@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class ArrayStack<T> implements Stack<T> {
+public class ArrayStack<T> implements Stack<T> {
   private static final int MIN_INITIAL_SIZE = 8;
   private int cursor = 0;
   private T[] s = (T[]) new Object[MIN_INITIAL_SIZE];

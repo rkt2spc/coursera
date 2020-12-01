@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class LinkedListQueue<T> implements Queue<T> {
+public class LinkedListQueue<T> implements Queue<T> {
   private class Node {
     T data;
     Node next;

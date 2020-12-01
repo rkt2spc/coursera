@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class ArrayQueue<T> implements Queue<T> {
+public class ArrayQueue<T> implements Queue<T> {
   private static final int MIN_INITIAL_SIZE = 8;
   private int head = 0;
   private int tail = 0;

@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class LinkedListStack<T> implements Stack<T> {
+public class LinkedListStack<T> implements Stack<T> {
   private class Node {
     T data;
     Node next;
