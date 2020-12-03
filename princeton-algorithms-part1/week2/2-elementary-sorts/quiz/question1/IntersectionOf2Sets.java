@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 public class IntersectionOf2Sets {
   public static class Point2D {
-    public static final Comparator<Point2D> XY_ORDER = new XYOrder();
+    public static final Comparator<Point2D> YX_ORDER = new YXOrder();
 
     public int x;
     public int y;
@@ -19,12 +19,12 @@ public class IntersectionOf2Sets {
       return "(" + x + "," + y + ")";
     }
 
-    private static class XYOrder implements Comparator<Point2D> {
+    private static class YXOrder implements Comparator<Point2D> {
       public int compare(Point2D p1, Point2D p2) {
-        if (p1.x > p2.x) return 1;
-        if (p1.x < p2.x) return -1;
         if (p1.y > p2.y) return 1;
         if (p1.y < p2.y) return -1;
+        if (p1.x > p2.x) return 1;
+        if (p1.x < p2.x) return -1;
         return 0;
       }
     }
@@ -44,14 +44,14 @@ public class IntersectionOf2Sets {
       List<Point2D> result = new ArrayList<Point2D>();
 
       Point2D[] sortedA = a.clone();
-      Arrays.sort(sortedA, Point2D.XY_ORDER);
+      Arrays.sort(sortedA, Point2D.YX_ORDER);
 
       Point2D[] sortedB = b.clone();
-      Arrays.sort(sortedB, Point2D.XY_ORDER);
+      Arrays.sort(sortedB, Point2D.YX_ORDER);
 
       int i = 0, j = 0;
       while (i < sortedA.length && j < sortedB.length) {
-        int comp = Point2D.XY_ORDER.compare(sortedA[i], sortedB[j]);
+        int comp = Point2D.YX_ORDER.compare(sortedA[i], sortedB[j]);
         if (comp < 0) i++;
         else if (comp > 0) j++;
         else {
