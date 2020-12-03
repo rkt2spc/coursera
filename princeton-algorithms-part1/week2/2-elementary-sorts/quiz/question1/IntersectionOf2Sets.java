@@ -1,54 +1,57 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class IntersectionOf2Sets {
-  public static class Point implements Comparable<Point> {
+  public static class Point2D {
+    public static final Comparator<Point2D> CLOCKWISE_ORDER = new ClockwiseOrder();
+
     public int x;
     public int y;
 
-    public Point(int x, int y) {
+    public Point2D(int x, int y) {
       this.x = x;
       this.y = y;
-    }
-
-    @Override
-    public int compareTo(Point that) {
-      if (that.x > this.x) return -1;
-      if (that.x < this.x) return 1;
-      if (that.y > this.y) return -1;
-      if (that.y < this.y) return 1;
-      return 0;
     }
 
     public String toString() {
       return "(" + x + "," + y + ")";
     }
+
+    private static class ClockwiseOrder implements Comparator<Point2D> {
+      public int compare(Point2D p1, Point2D p2) {
+        if (p1.x > p2.x) return 1;
+        if (p1.y > p2.y) return 1;
+        if (p1.x < p2.x) return -1;
+        if (p1.y < p2.y) return -1;
+        return 0;
+      }
+    }
   }
 
   public static class Problem {
-    public Point[] a;
-    public Point[] b;
-    public Problem(Point[] a, Point[] b) {
+    public Point2D[] a;
+    public Point2D[] b;
+    public Problem(Point2D[] a, Point2D[] b) {
       this.a = a;
       this.b = b;
     }
   }
 
   public static class Solution {
-    public Point[] intersect(Point[] a, Point[] b) {
-      List<Point> result = new ArrayList<Point>();
+    public Point2D[] intersect(Point2D[] a, Point2D[] b) {
+      List<Point2D> result = new ArrayList<Point2D>();
 
-      Point[] sortedA = Arrays.copyOf(a, a.length);
-      Arrays.sort(sortedA);
+      Point2D[] sortedA = a.clone();
+      Arrays.sort(sortedA, Point2D.CLOCKWISE_ORDER);
 
-      Point[] sortedB = Arrays.copyOf(b, b.length);
-      Arrays.sort(sortedB);
+      Point2D[] sortedB = b.clone();
+      Arrays.sort(sortedB, Point2D.CLOCKWISE_ORDER);
 
-      int i = 0;
-      int j = 0;
+      int i = 0, j = 0;
       while (i < sortedA.length && j < sortedB.length) {
-        int comp = sortedA[i].compareTo(sortedB[j]);
+        int comp = Point2D.CLOCKWISE_ORDER.compare(sortedA[i], sortedB[j]);
         if (comp < 0) i++;
         else if (comp > 0) j++;
         else {
@@ -59,26 +62,26 @@ public class IntersectionOf2Sets {
         }
       }
 
-      return result.toArray(Point[]::new);
+      return result.toArray(Point2D[]::new);
     }
   }
 
   public static void main(String[] args) {
     Problem p = new Problem(
-      new Point[]{
-        new Point(0, 0),
-        new Point(1, 1),
-        new Point(2, 2),
-        new Point(1, 0),
-        new Point(0, 2),
+      new Point2D[]{
+        new Point2D(0, 0),
+        new Point2D(1, 1),
+        new Point2D(2, 2),
+        new Point2D(1, 0),
+        new Point2D(0, 2),
       },
-      new Point[]{
-        new Point(3, 3),
-        new Point(0, 0),
-        new Point(1, 1),
-        new Point(2, 2),
-        new Point(0, 1),
-        new Point(2, 0),
+      new Point2D[]{
+        new Point2D(3, 3),
+        new Point2D(0, 0),
+        new Point2D(1, 1),
+        new Point2D(2, 2),
+        new Point2D(0, 1),
+        new Point2D(2, 0),
       }
     );
 
