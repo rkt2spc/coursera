@@ -2,6 +2,8 @@
 
 ## Setup
 
+**⚠️ Disclaimer:** These instructions are aimed at MacOS users and Java is assumed to be already installed.
+
 Source the [.envrc](./.envrc) file.
 
 This will download the necessary libraries to the `.lift/` directory under the current project path.
