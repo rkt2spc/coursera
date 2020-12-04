@@ -1,6 +1,6 @@
 # Queues
 
-- [Specifications](https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php)
+- [Specification](https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php)
 
 # How to run
 
