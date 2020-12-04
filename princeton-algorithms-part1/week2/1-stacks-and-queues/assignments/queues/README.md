@@ -1,18 +1,17 @@
 # Queues
 
 - [Specification](https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php)
+- [Setup/Execution Instructions](../../../../README.md)
 
-# How to run
+## Example executions
 
-1. Download the course Java stdlib from this [page](https://introcs.cs.princeton.edu/java/stdlib). In the assignment only **StdIn.java**, **StdOut.java** and **StdRandom.java** are needed.
-
-2. Compile everything
+1. Compile the code
 
 ```sh
 javac *.java
 ```
 
-3. Run the code
+2. Run the code
 
 ```sh
 java Deque
