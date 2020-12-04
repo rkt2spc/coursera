@@ -2,7 +2,7 @@
 
 ## Setup
 
-Source the file [.envrc](./.envrc).
+Source the [.envrc](./.envrc) file.
 
 This will download the necessary libraries to the `.lift/` directory under the current project path.
 
