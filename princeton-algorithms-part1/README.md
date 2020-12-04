@@ -1,8 +1,8 @@
 # Princeton Algorithms, Part 1
 
-## Setup
-
 **⚠️ Disclaimer:** These instructions are aimed at MacOS users and Java is assumed to be already installed.
+
+## Setup
 
 Source the [.envrc](./.envrc) file.
 
