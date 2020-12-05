@@ -3,7 +3,9 @@ import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
-  private Item[] elements = (Item[]) new Object[8];
+  private static final int MIN_INITIAL_SIZE = 8;
+
+  private Item[] elements = (Item[]) new Object[MIN_INITIAL_SIZE];
   private int size = 0;
 
   // construct an empty randomized queue
@@ -23,7 +25,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   // add the item
   public void enqueue(Item item) {
     if (item == null) throw new IllegalArgumentException("Item must not be null");
-    if (size >= elements.length) doubleCapacity();
+    resizeIfNeeded();
     elements[size++] = item;
   }
 
@@ -37,6 +39,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     size--;
     elements[p] = elements[size];
     elements[size] = null;
+
+    resizeIfNeeded();
 
     return result;
   }
@@ -82,20 +86,39 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     return new QueueIterator();
   }
 
-  private void doubleCapacity() {
-    if (size < elements.length) throw new IllegalStateException("Queue must be full before resizing");
+  private void resizeIfNeeded() {
+    double utilization = (double) size / elements.length;
 
-    int newCapacity = elements.length << 1;
-    if (newCapacity < 0) throw new IllegalStateException("Sorry, queue too big");
+    // Increase capacity
+    if (utilization >= 1) {
+      int newCapacity = elements.length;
+      while (newCapacity <= size) {
+        newCapacity = newCapacity << 1;
+        if (newCapacity < 0) throw new IllegalStateException("Sorry, queue too big");
+      }
+      Object[] a = new Object[newCapacity];
+      System.arraycopy(elements, 0, a, 0, size);
+      elements = (Item[]) a;
 
-    Object[] a = new Object[newCapacity];
-    System.arraycopy(elements, 0, a, 0, elements.length);
-    elements = (Item[]) a;
+      return;
+    }
+
+    // Decrease capacity
+    if (utilization <= 0.25) {
+      int newCapacity = elements.length >> 1;
+      if (newCapacity <= MIN_INITIAL_SIZE) return;
+
+      Object[] a = new Object[newCapacity];
+      System.arraycopy(elements, 0, a, 0, size);
+      elements = (Item[]) a;
+
+      return;
+    }
   }
 
   // unit testing (required)
   public static void main(String[] args) {
-    var q = new RandomizedQueue<Integer>();
+    RandomizedQueue<Integer> q = new RandomizedQueue<Integer>();
     q.enqueue(0);
     System.out.println(q.dequeue());
 
