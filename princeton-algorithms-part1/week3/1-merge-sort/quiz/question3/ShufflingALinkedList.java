@@ -7,8 +7,6 @@ public class ShufflingALinkedList {
     public static <T> void shuffle(LinkedList<T> list, Random rd) {
       if (list.size() <= 1) return;
 
-      int N = list.size();
-
       LinkedList<T> l1 = new LinkedList<T>();
       LinkedList<T> l2 = new LinkedList<T>();
       while (!list.isEmpty()) {
