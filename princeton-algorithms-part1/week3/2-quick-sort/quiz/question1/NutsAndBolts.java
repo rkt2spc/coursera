@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.AbstractMap.SimpleImmutableEntry;
@@ -94,13 +96,28 @@ public class NutsAndBolts {
       return bolts.clone();
     }
 
-    public boolean check(Nut[] nuts, Bolt[] bolts) {
-      if (nuts.length != bolts.length) throw new IllegalArgumentException("Must have the same number of nuts and bolts.");
+    public boolean check(Nut[] resultNuts, Bolt[] resultBolts) {
+      if (resultNuts.length != resultBolts.length) throw new IllegalArgumentException("Must have the same number of nuts and bolts.");
 
-      int n = nuts.length;
+      int n = N();
+      if (resultNuts.length != n) throw new IllegalArgumentException("Resulting nuts be of same size as the original problem.");
+      if (resultBolts.length != n) throw new IllegalArgumentException("Resulting bolts be of same size as the original problem.");
+
+      // Make sure resulting bolts and nuts match each other
       for (int i = 0; i < n; ++i) {
-        if (nuts[i].compareTo(bolts[i]) != 0) return false;
+        if (resultNuts[i].compareTo(resultBolts[i]) != 0) return false;
       }
+
+      // Make sure the original Nuts are being checked ;)
+      Set<Nut> pNuts = new HashSet<Nut>(Arrays.asList(nuts()));
+      Set<Nut> rNuts = new HashSet<Nut>(Arrays.asList(resultNuts));
+      if (!pNuts.containsAll(rNuts) || !rNuts.containsAll(pNuts)) return false;
+
+      // Make sure the original Bolts are being checked ;)
+      Set<Bolt> pBolts = new HashSet<Bolt>(Arrays.asList(bolts()));
+      Set<Bolt> rBolts = new HashSet<Bolt>(Arrays.asList(resultBolts));
+      if (!pBolts.containsAll(rBolts) || !rBolts.containsAll(pBolts)) return false;
+
       return true;
     }
 
@@ -130,7 +147,7 @@ public class NutsAndBolts {
     }
 
     // Hoare partition (this only work if a[lo:hi] contains unique elements)
-    // The pivot is assumed to appear only once and will be move to a[lo] or a[hi]
+    // The pivot is assumed to appear only once and will be moved to a[lo] or a[hi]
     // if met while iterating
     private static <T> int partition(T[] a, int lo, int hi, Comparable<T> pivot) {
       int i = lo, j = hi;
@@ -159,7 +176,7 @@ public class NutsAndBolts {
     }
 
     // Lomuto partition (this only work if a[lo:hi] contains unique elements)
-    // The pivot is assumed to appear only once and will be move to a[hi] if
+    // The pivot is assumed to appear only once and will be moved to a[hi] if
     // met while iterating
     private static <T> int partition2(T[] a, int lo, int hi, Comparable<T> pivot) {
       int head = lo;
