@@ -167,7 +167,7 @@ public class NutsAndBolts {
     private static <T> void sort(Nut[] nuts, Bolt[] bolts, int lo, int hi) {
       if (hi <= lo) return;
 
-      int partitionIndex = partition(nuts, lo, hi, bolts[lo]);
+      int partitionIndex = partition(nuts, lo, hi, bolts[lo + (hi - lo) / 2]);
       partition(bolts, lo, hi, nuts[partitionIndex]);
 
       sort(nuts, bolts, lo, partitionIndex - 1);
