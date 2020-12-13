@@ -55,7 +55,7 @@ public class ArrayQueue<T> implements Queue<T> {
     }
 
     // 25% capacity
-    if (!isEmpty() && ((float)size() / s.length) < 0.25) {
+    if (size() <= s.length / 4) {
       int newCapacity = s.length >> 1;
       if (newCapacity < MIN_INITIAL_SIZE) return;
       Object[] a = new Object[newCapacity];

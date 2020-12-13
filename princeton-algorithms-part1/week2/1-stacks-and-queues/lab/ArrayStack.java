@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -20,7 +21,7 @@ public class ArrayStack<T> implements Stack<T> {
     if (item == null) throw new IllegalArgumentException("Item must not be null");
 
     s[cursor++] = item;
-    increaseCapacityIfNeeded();
+    adjustCapacityIfNeeded();
   }
 
   public T pop() {
@@ -29,28 +30,30 @@ public class ArrayStack<T> implements Stack<T> {
     cursor--;
     T result = s[cursor];
     s[cursor] = null;
-    decreaseCapacityIfNeeded();
+    adjustCapacityIfNeeded();
     return result;
   }
 
-  private void increaseCapacityIfNeeded() {
-    if (cursor < s.length) return;
+  private void adjustCapacityIfNeeded() {
+    // Full capacity
+    if (size() >= s.length) {
+      int newCapacity = s.length << 1;
+      if (newCapacity < 0) throw new IllegalStateException("Sorry, stack too big");
+      Object[] a = new Object[newCapacity];
+      System.arraycopy(s, 0, a, 0, size());
+      s = (T[]) a;
+      return;
+    }
 
-    int newCapacity = s.length << 1;
-    if (newCapacity < 0) throw new IllegalStateException("Sorry, stack too big");
-    Object[] a = new Object[newCapacity];
-    System.arraycopy(s, 0, a, 0, cursor);
-    s = (T[]) a;
-  }
-
-  private void decreaseCapacityIfNeeded() {
-    if (cursor >= s.length / 4) return;
-
-    int newCapacity = s.length >> 1;
-    if (newCapacity < MIN_INITIAL_SIZE) return;
-    Object[] a = new Object[newCapacity];
-    System.arraycopy(s, 0, a, 0, cursor);
-    s = (T[]) a;
+    // 25% capacity
+    if (size() <= s.length / 4) {
+      int newCapacity = s.length >> 1;
+      if (newCapacity < MIN_INITIAL_SIZE) return;
+      Object[] a = new Object[newCapacity];
+      System.arraycopy(s, 0, a, 0, size());
+      s = (T[]) a;
+      return;
+    }
   }
 
   private class StackIterator implements Iterator<T> {

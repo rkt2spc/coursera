@@ -27,7 +27,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
 
     head = (head - 1) & (elements.length - 1);
     elements[head] = item;
-    if (head == tail) doubleCapacity();
+    adjustCapacityIfNeeded();
   }
 
   // add the item to the back
@@ -36,7 +36,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
 
     elements[tail] = item;
     tail = (tail + 1) & (elements.length - 1);
-    if (tail == head) doubleCapacity();
+    adjustCapacityIfNeeded();
   }
 
   // remove and return the item from the front
@@ -46,6 +46,8 @@ public class ArrayDeque<Item> implements Iterable<Item> {
     Item result = elements[head];
     elements[head] = null;
     head = (head + 1) & (elements.length - 1);
+
+    adjustCapacityIfNeeded();
     return result;
   }
 
@@ -56,6 +58,8 @@ public class ArrayDeque<Item> implements Iterable<Item> {
     tail = (tail - 1) & (elements.length - 1);
     Item result = elements[tail];
     elements[tail] = null;
+
+    adjustCapacityIfNeeded();
     return result;
   }
 
@@ -87,36 +91,57 @@ public class ArrayDeque<Item> implements Iterable<Item> {
     return new DequeIterator();
   }
 
-  private void doubleCapacity() {
-    if (head != tail) throw new IllegalStateException("Deque must be full before up-sizing");
-    int p = head;
-    int n = elements.length;
-    int r = n - p; // number of elements to the right of p
-    int newCapacity = n << 1;
-    if (newCapacity < 0) throw new IllegalStateException("Sorry, deque too big");
-    Object[] a = new Object[newCapacity];
-    System.arraycopy(elements, p, a, 0, r);
-    System.arraycopy(elements, 0, a, r, p);
-    elements = (Item[]) a;
-    head = 0;
-    tail = n;
+  private void adjustCapacityIfNeeded() {
+    // Full capacity
+    if (head == tail && elements[head] != null) {
+      int newCapacity = elements.length << 1;
+      if (newCapacity < 0) throw new IllegalStateException("Sorry, deque too big");
+      Object[] a = new Object[newCapacity];
+      System.arraycopy(elements, head, a, 0, elements.length - head);
+      System.arraycopy(elements, 0, a, elements.length - head, head);
+      tail = elements.length;
+      head = 0;
+      elements = (Item[]) a;
+      return;
+    }
+
+    // 25% capacity
+    if (size() <= elements.length / 4) {
+      int newCapacity = elements.length >> 1;
+      if (newCapacity < MIN_INITIAL_SIZE) return;
+      Object[] a = new Object[newCapacity];
+      if (head < tail) System.arraycopy(elements, head, a, 0, size());
+      else {
+        System.arraycopy(elements, head, a, 0, elements.length - head);
+        System.arraycopy(elements, 0, a, elements.length - head, tail);
+      }
+      tail = size();
+      head = 0;
+      elements = (Item[]) a;
+      return;
+    }
   }
 
   // unit testing (required)
   public static void main(String[] args) {
     ArrayDeque<Integer> d = new ArrayDeque<Integer>();
-    d.addFirst(3);
-    d.addLast(4);
-    d.addFirst(2);
-    d.addLast(5);
-    d.addFirst(1);
-    d.addLast(6);
-    d.addLast(0);
-    System.out.println(d.removeLast());
 
-    for (Integer item: d) {
-      System.out.println(item);
+    for (int i = 0; i < 10; ++i) {
+      d.addFirst(10 - i - 1);
+      d.addLast(10 + i);
     }
+
+    System.out.println("---");
+    for (Integer item: d) System.out.println(item);
+
+    System.out.println("---");
     while (!d.isEmpty()) System.out.println(d.removeFirst());
+
+    for (int i = 0; i < 10; ++i) {
+      d.addFirst(i);
+    }
+
+    System.out.println("---");
+    for (Integer item: d) System.out.println(item);
   }
 }
