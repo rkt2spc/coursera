@@ -5,7 +5,7 @@ public interface Heap<T> {
   // Retrieves, but does not remove, the top item of the heap
   public T peek();
 
-  // Retrieves and removes the top item of the heap or returns null if the heap is empty
+  // Retrieves and removes the top item of the heap
   public T pop();
 
   // Return the current size of the heap

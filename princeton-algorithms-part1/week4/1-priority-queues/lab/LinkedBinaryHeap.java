@@ -1,5 +1,7 @@
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Stack;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 public class LinkedBinaryHeap<T> implements Heap<T> {
   private int size = 0;
@@ -12,6 +14,8 @@ public class LinkedBinaryHeap<T> implements Heap<T> {
   }
 
   public void push(T item) {
+    if (item == null) throw new IllegalArgumentException("Item must not be null");
+
     // If the heap is empty, insert at the root node and return
     if (root == null) {
       last = root = new Node(item);
@@ -59,20 +63,18 @@ public class LinkedBinaryHeap<T> implements Heap<T> {
 
     // Restore the heap property.
     while (node.parent != null && compare(node.parent.value, node.value) > 0) {
-      T swap = node.value;
-      node.value = node.parent.value;
-      node.parent.value = swap;
+      exch(node, node.parent);
       node = node.parent;
     }
   }
 
   public T peek() {
-    if (isEmpty()) return null;
+    if (isEmpty()) throw new NoSuchElementException("Heap is empty");
     return root.value;
   }
 
   public T pop() {
-    if (isEmpty()) return null;
+    if (isEmpty()) throw new NoSuchElementException("Heap is empty");
 
     T result = root.value;
 
@@ -122,15 +124,13 @@ public class LinkedBinaryHeap<T> implements Heap<T> {
     Node node = root;
     while (node.left != null || node.right != null) {
       Node next;
-      if      (node.left == null) next = node.right;
+      if      (node.left == null)  next = node.right;
       else if (node.right == null) next = node.left;
-      else    next = compare(node.left.value, node.right.value) < 0 ? node.left : node.right;
+      else                         next = compare(node.left.value, node.right.value) < 0 ? node.left : node.right;
 
       if (compare(next.value, node.value) >= 0) break;
-      
-      T swap = node.value;
-      node.value = next.value;
-      next.value = swap;
+
+      exch(node, next);
       node = next;
     }
 
@@ -152,6 +152,12 @@ public class LinkedBinaryHeap<T> implements Heap<T> {
 
   private int compare(T a, T b) {
     return this.comparator.compare(a, b);
+  }
+
+  private void exch(Node a, Node b) {
+    T swap = a.value;
+    a.value = b.value;
+    b.value = swap;
   }
 
   private class Node {
@@ -218,5 +224,17 @@ public class LinkedBinaryHeap<T> implements Heap<T> {
 
       return sb.toString();
     }
+  }
+
+  public static void main(String[] args) {
+    LinkedBinaryHeap<Integer> minHeap = new LinkedBinaryHeap<Integer>(Comparator.naturalOrder());
+    Arrays.asList(10, 4, 15, 20, 0, 30, 2, 4, -1, -3).forEach((n) -> minHeap.push(n));
+    minHeap.pop();
+    System.out.println(minHeap.visualize());
+
+    LinkedBinaryHeap<Integer> maxHeap = new LinkedBinaryHeap<Integer>(Comparator.reverseOrder());
+    Arrays.asList(10, 4, 15, 20, 0, 30, 2, 4, -1, -3).forEach((n) -> maxHeap.push(n));
+    maxHeap.pop();
+    System.out.println(maxHeap.visualize());
   }
 }
