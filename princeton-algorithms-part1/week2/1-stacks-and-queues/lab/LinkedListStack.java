@@ -36,7 +36,7 @@ public class LinkedListStack<T> implements Stack<T> {
   }
 
   public T pop() {
-    if (head == null) throw new NoSuchElementException("Stack is empty");
+    if (isEmpty()) throw new NoSuchElementException("Stack is empty");
 
     T result = head.data;
     head = head.next;

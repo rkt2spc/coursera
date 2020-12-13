@@ -25,7 +25,7 @@ public class ArrayStack<T> implements Stack<T> {
   }
 
   public T pop() {
-    if (cursor == 0) throw new NoSuchElementException("Stack is empty");
+    if (isEmpty()) throw new NoSuchElementException("Stack is empty");
 
     cursor--;
     T result = s[cursor];

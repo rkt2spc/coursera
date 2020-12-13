@@ -31,7 +31,7 @@ public class LinkedListQueue<T> implements Queue<T> {
   }
 
   public void enqueue(T item) {
-    if (item == null) throw new IllegalArgumentException("Item must not be null");
+    if (isEmpty()) throw new IllegalArgumentException("Item must not be null");
 
     if (tail != null) tail = tail.next = new Node(item);
     else head = tail = new Node(item);
