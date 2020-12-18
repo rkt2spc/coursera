@@ -1,22 +1,23 @@
 import java.util.Comparator;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.TreeSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.SET;
 
 public class Solver {
   private static class Move {
     public Move previous;
+    public int numMoves;
     public Board board;
-    public int numMoves = 0;
+    public int hammingDistance;
+    public int manhattanDistance;
 
     public Move(Board board) {
+      this.numMoves = 0;
       this.board = board;
+      this.hammingDistance = board.hamming();
+      this.manhattanDistance = board.manhattan();
     }
 
     public Move nextMove(Board nextBoard) {
@@ -58,16 +59,16 @@ public class Solver {
       double h1 = 0, h2 = 0;
       switch (strategy) {
         case HammingDistance:
-          h1 = m1.board.hamming();
-          h2 = m2.board.hamming();
+          h1 = m1.hammingDistance;
+          h2 = m2.hammingDistance;
           break;
         case ManhattanDistance:
-          h1 = m1.board.manhattan();
-          h2 = m2.board.manhattan();
+          h1 = m1.manhattanDistance;
+          h2 = m2.manhattanDistance;
           break;
         default:
-          h1 = m1.board.manhattan();
-          h2 = m2.board.manhattan();
+          h1 = m1.manhattanDistance;
+          h2 = m2.manhattanDistance;
       }
 
       double g1 = m1.numMoves, g2 = m2.numMoves;
@@ -80,6 +81,8 @@ public class Solver {
 
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
+    if (initial == null) throw new IllegalArgumentException("The initial board cannot be null");
+
     // To get Dijkstra set heuristic weight = 0 (very long running time)
     Comparator<Move> comparator = new MoveComparator(1, 1, MoveComparator.HeuristicStrategy.ManhattanDistance);
 
@@ -123,16 +126,12 @@ public class Solver {
 
     List<Board> solution = new ArrayList<Board>();
     Move it = lastMove;
-    while (it.previous != null) {
-      solution.add(it.previous.board);
+    while (it != null) {
+      solution.add(it.board);
       it = it.previous;
     }
     Collections.reverse(solution);
 
     return solution;
-  }
-
-  // test client (see below)
-  public static void main(String[] args) {
   }
 }

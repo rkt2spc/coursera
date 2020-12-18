@@ -3,10 +3,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Board {
-  public static int EMPTY_TILE = 0;
+  private static final int EMPTY_TILE = 0;
 
   private final int n;
-  public final int[][] tiles;
+  private final int[][] tiles;
 
   // create a board from an n-by-n array of tiles,
   // where tiles[row][col] = tile at (row, col)
@@ -94,10 +94,10 @@ public class Board {
     return true;
   }
 
-  @Override
-  public int hashCode() {
-    return Arrays.deepHashCode(tiles);
-  }
+  // @Override
+  // public int hashCode() {
+  //   return Arrays.deepHashCode(tiles);
+  // }
 
   // all neighboring boards
   public Iterable<Board> neighbors() {
