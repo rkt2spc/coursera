@@ -74,18 +74,27 @@ public class Board {
   // does this board equal y?
   @Override
   public boolean equals(Object y) {
-    if (!(y instanceof Board)) {
+    if (y == this) {
+      return true;
+    }
+
+    if (y == null) {
+      return false;
+    }
+
+    if (y.getClass() != this.getClass()) {
       return false;
     }
 
     Board that = (Board) y;
-    if (n != that.n) {
+
+    if (this.n != that.n) {
       return false;
     }
 
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < n; ++j) {
-        if (tiles[i][j] != that.tiles[i][j]) {
+        if (this.tiles[i][j] != that.tiles[i][j]) {
           return false;
         }
       }
