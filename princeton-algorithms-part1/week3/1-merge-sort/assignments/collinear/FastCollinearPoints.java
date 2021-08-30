@@ -35,14 +35,22 @@ public class FastCollinearPoints {
     for (int i = 0; i < n; ++i) {
       Point anchor = points[i];
 
+      // Sort the auxiliary by their slope relative to the anchor
+      // After this sort, the anchor is always the first element
       Arrays.sort(aux, anchor.slopeOrder());
 
+      // Implement a sliding window that captures points with the same
+      // slope to the anchor (start from 1 since 0 is the anchor itself)
       int head = 1;
       while (head < n) {
+        double slope = aux[head].slopeTo(anchor);
+
+        // Keep track of the min/max Point ordered by top->down / left->right
         Point lfence = aux[head];
         Point rfence = aux[head];
-        double slope = lfence.slopeTo(anchor);
 
+        // Expand the window's tail while it's slope to anchor is equal
+        // to the head slope to anchor
         int tail = head + 1;
         while (tail < n && aux[tail].slopeTo(anchor) == slope) {
           if (aux[tail].compareTo(lfence) < 0) lfence = aux[tail];
@@ -50,6 +58,10 @@ public class FastCollinearPoints {
           ++tail;
         }
 
+        // If the window size is larger than or equal to 3, that means with
+        // the anchor included we'll have a line segment of 4 points
+        // To avoid adding sub-segments we only update the answer array when
+        // anchor is the min Point ordered by top-down / left-right (or max)
         if (tail - head >= 3 && anchor.compareTo(lfence) < 0) {
           segmentsList.add(new LineSegment(anchor, rfence));
         }
