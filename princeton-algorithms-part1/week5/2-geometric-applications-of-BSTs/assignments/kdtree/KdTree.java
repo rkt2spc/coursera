@@ -45,9 +45,8 @@ public class KdTree {
     if (p == null)
       throw new IllegalArgumentException();
 
-    ++size;
-
     if (root == null) {
+      ++size;
       root = new Node(p);
       return;
     }
@@ -55,17 +54,22 @@ public class KdTree {
     int depth = 0;
     Node it = root;
     while (true) {
+      if (it.point.equals(p))
+        break;
+
       int cmp = DIMENSIONS.get(depth++ % DIMENSIONS.size()).compare(p, it.point);
 
       if (cmp <= 0) {
         if (it.left != null) it = it.left;
         else {
+          ++size;
           it.left = new Node(p);
           break;
         }
       } else {
         if (it.right != null) it = it.right;
         else {
+          ++size;
           it.right = new Node(p);
           break;
         }
@@ -235,7 +239,10 @@ public class KdTree {
       int depth = depths.pop();
       RectHV boundary = boundaries.pop();
 
-      if (p.distanceSquaredTo(n.point) < p.distanceSquaredTo(ans))
+      if (boundary.distanceSquaredTo(p) >= ans.distanceSquaredTo(p))
+        continue;
+
+      if (n.point.distanceSquaredTo(p) < ans.distanceSquaredTo(p))
         ans = n.point;
 
       RectHV leftBoundary, rightBoundary;
@@ -250,13 +257,13 @@ public class KdTree {
 
       List<Map.Entry<Node, RectHV>> candidates = new ArrayList<>();
 
-      if (n.left != null && ans.distanceSquaredTo(p) >= leftBoundary.distanceSquaredTo(p))
-        candidates.add(Map.entry(n.left, leftBoundary));
-
-      if (n.right != null && ans.distanceSquaredTo(p) >= rightBoundary.distanceSquaredTo(p))
+      if (n.right != null && ans.distanceSquaredTo(p) > rightBoundary.distanceSquaredTo(p))
         candidates.add(Map.entry(n.right, rightBoundary));
 
-      Collections.sort(candidates, (a, b) -> a.getValue().contains(p) ? 1 : -1);
+      if (n.left != null && ans.distanceSquaredTo(p) > leftBoundary.distanceSquaredTo(p))
+        candidates.add(Map.entry(n.left, leftBoundary));
+
+      Collections.sort(candidates, (a, b) -> Double.compare(b.getValue().distanceSquaredTo(p), a.getValue().distanceSquaredTo(p)));
 
       for (Map.Entry<Node, RectHV> candidate : candidates) {
         nodes.push(candidate.getKey());
