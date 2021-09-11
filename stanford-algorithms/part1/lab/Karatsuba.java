@@ -49,6 +49,11 @@ class Karatsuba {
   }
 
   public static void main(String[] args) {
+    if (args.length == 2) {
+      System.out.println(karatsuba(new BigInteger(args[0]), new BigInteger(args[1])));
+      return;
+    }
+
     long start, stop;
     Random random = new Random();
     int N = Integer.parseInt(args[0]);
