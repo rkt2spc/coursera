@@ -1,5 +1,7 @@
 # Master Method for computing upper-bound complexity of recursive divide and conquer algorithms
 
+Note: View the `MasterMethod.tex` for most update to date content.
+
 ## Recurrence Formula
 
 ```txt

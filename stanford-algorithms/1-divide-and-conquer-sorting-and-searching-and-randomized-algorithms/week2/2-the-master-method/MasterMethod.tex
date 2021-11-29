@@ -1,0 +1,260 @@
+\documentclass{article}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{enumitem}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Master method for calculating upper-bound complexity of recursive divide and conquer algorithms}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This paper aims to explain the master method used for calculating upper-bound complexity of recursive divide and conquer algorithms. The materials here are my interpretation of the Stanford Algorithms lecture.
+
+\section{Divide and Conquer}
+
+A recursive divide and conquer algorithm method is understood to be comprised of 2 steps
+
+\begin{description}
+    \item[The divide and conquer step] which splits the problem into smaller sub-problems, then recursively invoke the method on each sub-problem.
+    \item[The combine step] which combines the results of all solved sub-problems from the divide and conquer step.
+\end{description}
+
+\noindent\textsc{NOTE}: To avoid the divide process running indefinitely, it is assumed that when the problem reach a certain small enough size, the conquer process can be performed in constant time without further recursion.
+
+\section{Recurrence Formula} \label{Recurrence Formula}
+
+The recurrence formula relatively describes the number of operations performed by a recursive divide and conquer algorithm. It takes the following form:
+
+\bigskip
+
+\begin{equation*}
+T(n) = a \cdot T(\frac{n}{b}) + C \cdot n^d
+\end{equation*}
+
+\begin{description}[labelindent=0.5cm, noitemsep, leftmargin=!,labelwidth=\widthof{\bfseries $C$}]
+    \item[$n$] : the input size
+    \item[$a$] : the number of recursive calls (number of sub-problems)
+    \item[$b$] : the input shrinkage factor
+    \item[$d$] : the exponent factor of performing the combine step
+    \item[$C$] : the constant factor of performing the combine step
+\end{description}
+
+\subsection{Examples}
+
+\noindent For \textsc{Merge Sort}
+
+\begin{itemize}[label={}]
+    \item We make \textbf{2 recursive calls} ($a=2$) in each invocation
+    \item The input size \textbf{reduced by half} ($b=2$) for each recursive call
+    \item The combine step aka "merge" is performed in \textbf{linear time} ($d = 1$)
+\end{itemize}
+
+\noindent The recurrence formula for \textsc{Merge Sort} is $T(n) = 2T(\frac{n}{2}) + C \cdot n$
+
+\bigskip
+
+\noindent For \textsc{Binary Search}
+
+\begin{itemize}[label={}]
+    \item We make \textbf{1 recursive call} ($a=1$) in each invocation
+    \item The input size \textbf{reduced by half} ($b=2$) for each recursive call
+    \item The combine step is performed in \textbf{constant time} ($d = 0$)
+\end{itemize}
+
+\noindent The recurrence formula for \textsc{Binary Search} is $T(n) = T(\frac{n}{2}) + C$
+
+\section{Assumptions}
+
+The master method explained here is only correct under the assumption that sub-problems must be of equal size (e.g in merge sort, you divide the original array in to 2 \textbf{equal size} sub-arrays).
+
+\section{Master Method Formula} \label{Master Method Formula}
+
+Given a recursive divide and conquer method $T(n) = a \cdot T(\frac{n}{b}) + C \cdot n^d$ with parameters as described in \nameref{Recurrence Formula}. The upper bound complexity of the method $T(n)$ can be calculated as follow:
+
+\bigskip
+
+\begin{equation*}
+T(n) = 
+\begin{cases}
+    O(n^d \cdot \log n),& \text{if } a = b^d\\
+    O(n^d),& \text{if } a < b^d\\
+    O(n^{\log_{b} a}),& \text{if } a > b^d
+\end{cases}
+\end{equation*}
+
+\section{Proof}
+
+Following the recurrence formula, imagine a recursion tree that has that has many levels.
+
+\subsection*{Observation 1}
+
+At level \textit{j} of the recursion tree.
+
+\begin{itemize}[label={}]
+    \item The number of sub-problems is: $a^j$
+    \item Each sub-problem size is: $\frac{n}{b^j}$
+\end{itemize}
+
+\subsection*{Observation 2}
+
+The maximum depth of the recursion tree is $\log_{b} n$
+
+\bigskip
+
+\noindent Because at that level the input size is $\frac{n}{b^{log_{b} n}} = \frac{n}{n} = 1$ which is a constant and at that constant input size recursion is no longer needed.  
+
+\bigskip
+
+\noindent$\implies j = 0, 1, 2, 3, ..., log_{b} n$
+
+\subsection*{Observation 3}
+
+Following the recurrence formula, the total amount of work at level \textit{j} of the recursion tree, \textbf{ignoring works in recursive calls}, is lesser than or equal to:  
+
+\begin{quote}
+The total effort of the "combining step" of all sub-problems at level \textit{j} of the recursion tree.
+\end{quote}
+
+\noindent In other words, it is lesser than or equal to
+
+\begin{quote}
+The number of sub-problems $a^j$ multiplied by the amount of work in the combining step of each sub-problem of size $\frac{n}{b^j}$, which is $C \cdot (\frac{n}{b^j})^d$
+\end{quote}
+
+\noindent In mathematical notion the total amount of work at level \textit{j} of the recursion tree, $W(j)$, is:
+
+\begin{equation*}
+\begin{split}
+W(j) & \leq a^j \cdot C \cdot (\frac{n}{b^j})^d \\
+\iff W(j) & \leq C \cdot n^d \cdot (\frac{a}{b^d})^j
+\end{split}
+\end{equation*}
+
+\noindent Notice the total amount of work at each level of the recursion tree is govern by the ratio between $a$ and $b^d$ (which hints at the condition of the 3 cases in the \nameref{Master Method Formula})
+
+\begin{itemize}[label={}]
+    \item If $a = b^d$ meaning $\frac{a}{b^d} = 1$, the amount of work is equal at every level of the recursion tree regardless of depth \textit{j}
+    \item If $a < b^d$ meaning $\frac{a}{b^d} < 1$, the amount of work decrease proportionately to the recursion level depth \textit{j}
+    \item If $a > b^d$ meaning $\frac{a}{b^d} > 1$, the amount of work increase proportionately to the recursion level depth \textit{j}
+\end{itemize}
+
+\subsection*{Observation 4}
+
+\noindent Combining information from the previous observations we have:
+
+\begin{itemize}[label={}]
+    \item The recursion tree has at most $log_{b} n$ levels, meaning $j = 0, 1, 2, 3, ..., log_{b} n$
+    \item The amount of work at level \textit{j} of the recursion tree, $W(j) \leq C \cdot n^d \cdot (\frac{a}{b^d})^j$
+\end{itemize}
+
+\noindent The total amount of work of the recursion tree, denoted as $T(n)$ by the \nameref{Recurrence Formula}, is bounded by the sum of the amount of work at all levels.
+
+\begin{equation}\label{eq:*}\tag{*}
+\begin{split}
+T(n) & \leq \sum_{j=1}^{log_{b} n} W(j) \\
+\iff T(n) & \leq \sum_{j=1}^{log_{b} n} C \cdot n^d \cdot (\frac{a}{b^d})^j \\
+\iff T(n) & \leq C \cdot n^d \cdot \sum_{j=1}^{log_{b} n} (\frac{a}{b^d})^j
+\end{split}
+\end{equation}
+
+\subsection*{Case $a = b^d$}
+
+\noindent As $\frac{a}{b^d} = 1$, (\ref{eq:*}) becomes
+
+\begin{equation*}
+\begin{split}
+T(n) & \leq C \cdot n^d \cdot \sum_{j=0}^{log_{b} n} 1^j \\
+\iff T(n) & \leq C \cdot n^d \cdot (\log_{b} n + 1)   
+\end{split}
+\end{equation*}
+
+
+\noindent Applying the Big-O notation we'll have
+
+\begin{equation*}
+T(n) = O(n^d \cdot \log n)
+\end{equation*}
+
+\noindent \textit{This proves case 1 of the master method.}
+
+\subsection*{Case $a \neq b^d$}
+
+\textbf{Math fact:}
+
+\bigskip
+
+\noindent For $r \neq 1$ we have $1 + r + r^2 + r^3 + ... + r^k = \sum_{j=0}^{k} r^j = \frac{r^{k + 1} - 1}{r - 1}$
+
+\begin{itemize}[label={}]
+    \item If $r < 1$ then $\sum_{j=0}^{k} r^j \leq \frac{1}{1 - r}$ which is a constant independent of $k$
+    \item If $r > 1$ then $\sum_{j=0}^{k} r^j \leq r^k \cdot (1 + \frac{1}{r - 1})$. In which $\frac{1}{r - 1}$ is a constant independent of $k$
+\end{itemize}
+
+\subsection*{Case $a < b^d$}
+
+Base on the \textsc{Math fact} formula, imagine $r = \frac{a}{b^d}$, in this case $r < 1$ because $a < b^d$. We'll see that (\ref{eq:*}) becomes:
+
+\begin{equation*}
+\begin{split}
+T(n) & \leq C \cdot n^d \cdot \frac{1}{1 - \frac{a}{b^d}}
+\end{split}
+\end{equation*}
+
+\noindent In which $\frac{1}{1 - \frac{a}{b^d}}$ is a constant. We can safely remove this constant as we convert into Big-O notation, which gets us:
+
+\begin{equation*}
+T(n) = O(n^d)
+\end{equation*}
+
+\noindent \textit{This proves case 2 of the master method.}
+
+\subsection*{Case $a > b^d$}
+
+Base on the \textsc{Math fact} formula, imagine $r = \frac{a}{b^d}$, in this case $r > 1$ because $a > b^d$. We'll see that (\ref{eq:*}) becomes:
+
+\begin{equation*}
+\begin{split}
+T(n) & \leq C \cdot n^d \cdot (\frac{a}{b^d})^{\log_{b} n} \cdot (1 + \frac{1}{\frac{a}{b^d} - 1})
+\end{split}
+\end{equation*}
+
+\noindent In which $1 + \frac{1}{\frac{a}{b^d} - 1}$ is a constant. We can safely remove this constant as we convert into Big-O notation, which gets us:
+
+\begin{equation*}
+\begin{split}
+T(n) & = O(n^d \cdot (\frac{a}{b^d})^{\log_{b} n}) \\
+     & = O(n^d \cdot a^{log_{b} n} \cdot (\frac{1}{b^d})^{log_{b} n}) \\
+     & = O(n^d \cdot a^{log_{b} n} \cdot b^{(\log_{b} n)(-d)}) \\
+     & = O(n^d \cdot a^{log_{b} n} \cdot n^{-d}) \\
+     & = O(a^{log_{b} n}) \\
+     & = O(n^{log_{b} a})
+\end{split}
+\end{equation*}
+
+\noindent Note that $a^{log_{b} n} = n^{log_{b} a}$ with the below proof:
+
+\smallskip
+
+\fbox{\begin{minipage}{13em}
+\begin{equation*}
+\begin{split}
+log_{n} a & = \frac{log_{b} a}{log_{b} n} \\
+\iff log_{b} a & = (log_{n} a)(log_{b} n) \\
+\iff n^{log_{b} a} & = n^{(log_{n} a)(log_{b} n)} \\
+\iff n^{log_{b} a} & = a^{log_{b} n}
+\end{split}
+\end{equation*}
+\end{minipage}}
+
+\bigskip
+
+\noindent \textit{This proves case 3 of the master method.}
+
+\end{document}
