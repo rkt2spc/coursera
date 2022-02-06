@@ -1,0 +1,220 @@
+\documentclass{article}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Quick Sort Complexity}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This paper aims to explain the running time complexity of the Quick Sort algorithm. The materials here are my interpretation of the Stanford Algorithms lecture.
+
+\section{Worst-case complexity}
+
+Quick Sort worst-case complexity is $O(n^2)$
+
+\bigskip
+
+\noindent When the pivot is repeatedly chosen as the smallest or largest element in the current sub-problem of size \textbf{n}. In that case, after the partition step, one of our next sub-problems will be empty and terminate immediately, while the other sub-problem will have size \textbf{n-1}.
+
+\bigskip
+
+\noindent As the partition operation take $O(n)$ complexity over a sub-problem of size \textbf{n}. Our total complexity in the worst case described above  will be:
+
+\begin{equation*}
+O(n + (n-1) + (n-2) + ... + 1) = O(n^2)
+\end{equation*}
+
+\section{Average-case complexity}
+
+\subsection{Statement}
+
+When the pivot is chosen randomly the average running time complexity of Quick Sort is:
+
+\begin{equation*}
+O(n \cdot \log n)
+\end{equation*}
+
+\subsection{Proof}
+
+Let's say we're given the input array \textbf{A} of length \textbf{n}
+
+\bigskip
+
+\noindent In Quick Sort an element can only be chosen as the pivot once, so as we run the algorithm pivots are selected in a specific sequence.
+
+\bigskip
+
+\noindent Let's have our sample space $\Omega$ = all the possible pivot sequences
+
+\bigskip
+
+\noindent For a random pivot sequence $\sigma \in \Omega$, let's define:
+
+\bigskip
+
+$C(\sigma)$ = total number of comparisons between any 2 input elements made by Quick Sort (given a randomly chosen pivot sequence $\sigma$)
+
+\bigskip
+
+\noindent \textbf{FACT: Running Time (RT) of Quick Sort is dominated by comparisons. Formally:}
+
+\begin{equation*}
+\boxed{\exists c, \forall \sigma \in \Omega, RT(\sigma) \leq c \cdot C(\sigma)}
+\end{equation*}
+
+\noindent So in order to prove the average running time of Quick Sort is $O(n \cdot \log n)$, we just need to prove the average number of comparisons in Quick Sort $E[C] = O(n \cdot \log n)$
+
+\bigskip
+
+\noindent Let's denote $z_i$ as the \textit{i-th} smallest element of \textbf{A}
+
+\bigskip
+
+\noindent For $\sigma \in \Omega$, indices $i < j$, let:
+
+\bigskip
+
+$X_{ij}(\sigma)$ = number of times $z_i$ and $z_j$ get compared in Quick Sort with pivot sequence $\sigma$
+
+
+\bigskip
+
+\noindent So we can write:
+
+\begin{equation*}
+\forall \sigma \in \Omega, C(\sigma) = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} X_{ij}(\sigma)
+\end{equation*}
+
+\bigskip
+
+\noindent And instead of proving:
+
+\begin{equation*}
+E[C] = O(n \cdot \log n)
+\end{equation*}
+
+\bigskip
+
+\noindent We can just prove:
+
+\begin{equation*}
+\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} E[X_{ij}] = O(n \cdot \log n)
+\end{equation*}
+
+
+\bigskip
+
+\noindent Notice that $X_{ij}(\sigma)$ can only be 0 or 1
+
+\begin{equation*}
+X_{ij}(\sigma) = 
+\begin{cases}
+    0,& \text{if i and j are passed into 2 different recursive calls after partition}\\
+    1,& \text{if i or j is picked as the pivot and compared to the other during partition}
+\end{cases}
+\end{equation*}
+
+\bigskip
+
+\noindent With:
+
+\bigskip
+
+$P[X_{ij}=0]$ is the probability that $X_{ij} = 0$
+
+\bigskip
+
+$P[X_{ij}=1]$ is the probability that $X_{ij} = 1$ (probability $z_i$, $z_j$ are compared)
+
+\bigskip
+
+\noindent We have
+
+\begin{equation*}
+\begin{split}
+E[X_{ij}] & = 0 \cdot P[X_{ij}=0] + 1 \cdot P[X_{ij}=1] \\
+& = P[X_{ij}=1]
+\end{split}
+\end{equation*}
+
+\bigskip
+
+\noindent Thus:
+
+\begin{equation*}\tag{*}
+E[C] = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P[z_i \text{, } z_j \text{ are compared}]
+\end{equation*}
+
+\bigskip
+
+\noindent \textbf{CLAIM:}
+
+\begin{equation*}
+\boxed{\forall i < j$, $P[z_i \text{, } z_j \text{ are compared}] = \frac{2}{j - i + 1}}
+\end{equation*}
+
+\bigskip
+
+\noindent Proving the claim:
+
+\bigskip
+
+\noindent Fix $z_i$, $z_j$ with $i < j$
+
+\bigskip
+
+\noindent Consider the set $z_i$, $z_{i+1}$, ..., $z_{j-1}$, $z_j$
+
+\bigskip
+
+\noindent We can see that $z_i$ and $z_j$ is compared only if $z_i$ or $z_j$ is chosen as the pivot. If any elements in between is chosen as the pivot then $z_i$ and $z_j$ will be separated into 2 different recursive calls.
+
+\bigskip
+
+\noindent The probability of $z_i$ or $z_j$ get chosen as the pivot within the set $z_i$, $z_{i+1}$, ..., $z_{j-1}$, $z_j$ (provided the pivot is chosen randomly) is $\frac{2}{j - i + 1}$
+
+\bigskip
+
+\noindent Using the proven claim, we can write:
+
+\begin{equation*}
+\begin{split}
+E[C] & = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} P[z_i \text{, } z_j \text{ are compared}] \\
+     & = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{2}{j - i + 1} \\
+     & = 2 \cdot \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \frac{1}{j - i + 1}
+\end{split}
+\end{equation*}
+
+
+\bigskip
+
+\noindent \textbf{Note:} In the equation above, for each fixed i, the inner sum is
+
+\begin{equation*}
+\sum_{j=i+1}^{n} \frac{1}{j - i + 1} = \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + ...
+\end{equation*}
+
+\bigskip
+
+\noindent We can then put the upper-bound for $E[C]$ as
+
+\begin{equation*}
+E[C] \leq 2 \cdot n \cdot \sum_{k=2}^{n} \frac{1}{k}
+\end{equation*}
+
+\bigskip
+
+\centering
+\includegraphics[width=\textwidth]{proof}
+
+\end{document}
