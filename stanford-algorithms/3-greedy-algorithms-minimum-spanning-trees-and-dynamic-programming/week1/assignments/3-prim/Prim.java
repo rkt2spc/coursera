@@ -1,7 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
-import lib.*;
+import java.util.Scanner;
+import java.util.Map;
+import java.util.PriorityQueue;
+import lib.SimpleWeightedGraph;
+import lib.WeightedPseudoGraph;
+import lib.WeightedUndirectedEdge;
 
 public class Prim {
   public static <T> SimpleWeightedGraph<T> mst(WeightedPseudoGraph<T> graph) {
