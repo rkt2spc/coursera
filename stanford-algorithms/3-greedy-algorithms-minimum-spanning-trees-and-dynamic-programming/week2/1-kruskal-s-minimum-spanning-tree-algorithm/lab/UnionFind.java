@@ -27,17 +27,17 @@ public class UnionFind<T> {
     if (pr.equals(qr))
       return;
 
-    int prw = this.rankOf.getOrDefault(pr, 1);
-    int qrw = this.rankOf.getOrDefault(qr, 1);
+    int prw = this.rankOf.getOrDefault(pr, 0);
+    int qrw = this.rankOf.getOrDefault(qr, 0);
 
-    if (prw < qrw) {
+    if (prw <= qrw) {
       this.parentOf.put(pr, qr);
       this.rankOf.remove(pr);
-      this.rankOf.put(qr, prw + qrw);
+      if (prw == qrw)
+        this.rankOf.put(qr, qrw + 1);
     } else {
       this.parentOf.put(qr, pr);
       this.rankOf.remove(qr);
-      this.rankOf.put(pr, prw + qrw);
     }
   }
 
