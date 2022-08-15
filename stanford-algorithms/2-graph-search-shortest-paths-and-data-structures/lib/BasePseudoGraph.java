@@ -82,7 +82,10 @@ public class BasePseudoGraph<V, E extends UndirectedEdge<V>> {
   }
 
   public Set<E> edgesBetween(V v1, V v2) {
-    return Collections.unmodifiableSet(this.edgesBetween.getOrDefault(Set.of(v1, v2), new HashSet<>()));
+    Set<V> key = new HashSet<>();
+    key.add(v1);
+    key.add(v2);
+    return Collections.unmodifiableSet(this.edgesBetween.getOrDefault(key, new HashSet<>()));
   }
 
   public boolean hasEdgesBetween(V v1, V v2) {
