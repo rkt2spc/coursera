@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.function.BiFunction;
 import java.util.Random;
 
-import lib.*;
+import lib.graph.SimpleWeightedGraph;
+import lib.graph.WeightedUndirectedEdge;
 
 public class Clustering {
   public static class Point {

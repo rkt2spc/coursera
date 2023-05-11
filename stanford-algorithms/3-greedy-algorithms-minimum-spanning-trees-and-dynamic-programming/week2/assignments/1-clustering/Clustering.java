@@ -4,7 +4,8 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 
-import lib.*;
+import lib.graph.SimpleWeightedGraph;
+import lib.graph.WeightedUndirectedEdge;
 
 public class Clustering {
   public static <T> Double clustersMaximumSpacing(int k, SimpleWeightedGraph<T> graph) {

@@ -1,7 +1,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
-import lib.*;
+import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.List;
+import java.util.LinkedList;
+
+import lib.graph.SimpleWeightedGraph;
+import lib.graph.WeightedUndirectedEdge;
 
 public class Dijkstra {
   public static <V> Map.Entry<List<V>, Double> shortestPath(SimpleWeightedGraph<V> graph, V start, V end) {
