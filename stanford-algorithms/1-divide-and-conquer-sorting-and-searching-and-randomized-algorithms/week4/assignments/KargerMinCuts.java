@@ -29,7 +29,7 @@ public class KargerMinCuts {
 
     public void addEdges(T v1, T v2, int amount) {
       if (v1.equals(v2))
-        throw new IllegalArgumentException("cannot add a self-loop edge.");
+        throw new IllegalArgumentException("Cannot add a self-loop edge.");
 
       addVertex(v1);
       addVertex(v2);
