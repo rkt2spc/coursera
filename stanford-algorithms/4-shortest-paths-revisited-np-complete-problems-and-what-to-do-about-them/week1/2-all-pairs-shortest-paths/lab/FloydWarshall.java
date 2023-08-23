@@ -46,6 +46,12 @@ public class FloydWarshall {
       }
     }
 
+    // Detect negative cycles
+    for (int i = 0; i < n; ++i) {
+      if (A[i][i] < 0)
+        throw new IllegalArgumentException("Provided graph contains negative cycle(s)");
+    }
+
     Set<WeightedDirectedEdge<V, Double>> ans = new HashSet<>();
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < n; ++j) {

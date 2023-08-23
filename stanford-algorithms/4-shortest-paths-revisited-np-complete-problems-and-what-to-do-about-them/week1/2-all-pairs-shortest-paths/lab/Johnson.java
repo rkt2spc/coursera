@@ -71,6 +71,16 @@ public class Johnson {
         break;
     }
 
+    // Run an extra iteration to detect negative cycles
+    for (V vertex : graph.vertices()) {
+      double minCost = Double.MAX_VALUE;
+      for (WeightedDirectedEdge<V, Double> edge : graph.edgesTo(vertex))
+        minCost = Math.min(minCost, p.get(edge.source()) + edge.weight());
+    
+      if (minCost < p.get(vertex))
+        throw new IllegalArgumentException("Provided graph contains negative cycle(s)");
+    }
+
     // Re-weight the graph edges
     for (WeightedDirectedEdge<V, Double> edge : graph.edges()) {
       edge.setWeight(edge.weight() + p.get(edge.source()) - p.get(edge.target()));
