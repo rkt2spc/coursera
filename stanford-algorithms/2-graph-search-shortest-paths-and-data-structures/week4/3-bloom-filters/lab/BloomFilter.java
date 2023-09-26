@@ -60,27 +60,40 @@ public class BloomFilter<T> {
     return Math.pow(1 - Math.exp(-k / (m / n)), k);
   }
 
-  public final int numHashes; // More hashes -> reduce false positives but slower speed
-  public final int numBits; // More bits -> reduce false positives but increase memory usage
+  public static int optimalNumHashes(int numEntries, int numBits) {
+    double m = numBits;
+    double n = numEntries;
+    double k = m / n * Math.log(2);
+
+    return Math.max((int)(Math.round(k)), 1);
+  }
+
+  // The number of hashes balances the false positive rate out of 2 considerations:
+  // - More hashes -> More bits that are set -> Higher risk of false positives
+  // - More hashes -> Less likely that one of them triggers a false positive
+  // The optimal number of hashes is: numBits * ln(2) / numEntries
+  public final int numHashes;
+
+  // More bits -> reduce false positives but increase memory usage
+  public final int numBits;
+
   private final BitSet bits;
 
-  public BloomFilter(int numBits) {
-    this.numHashes = (int)(numBits * Math.log(2));
-    this.numBits = numBits;
-    this.bits = new BitSet(numBits);
-  }
-  
   public BloomFilter(int numHashes, int numBits) {
     this.numHashes = numHashes;
     this.numBits = numBits;
     this.bits = new BitSet(numBits);
   }
 
-  public double falsePositiveProbabilityUpperBound() {
+  public double falsePositiveProbabilityBound() {
     double numHashes = this.numHashes;
     double numBits = this.numBits;
 
     return Math.pow(1 - Math.exp(-numHashes/numBits), numHashes);
+  }
+
+  public double falsePositiveProbability(int numEntries) {
+    return BloomFilter.falsePositiveProbability(numEntries, this.numHashes, this.numBits);
   }
 
   public void add(T value) {
@@ -103,8 +116,17 @@ public class BloomFilter<T> {
   }
 
   public static void main(String[] args) {
-    BloomFilter<String> bf = new BloomFilter<>(10);
-    System.out.println("False Positive Probability Upper Bound: " + bf.falsePositiveProbabilityUpperBound());
+    int numEntries = 1000;
+    int numBits = 2000;
+    int numHashes = BloomFilter.optimalNumHashes(numEntries, numBits);
+
+    System.out.println(String.format("Number of entries: %d", numEntries));
+    System.out.println(String.format("Number of bits: %d", numBits));
+    System.out.println(String.format("Number of hashes (calculated optimally): %d", numHashes));
+
+    BloomFilter<String> bf = new BloomFilter<>(numHashes, numBits);
+    System.out.println(String.format("False Positive Probability Bound: %f", bf.falsePositiveProbabilityBound()));
+    System.out.println(String.format("False Positive Probability (%d entries): %f", numEntries, bf.falsePositiveProbability(numEntries)));
 
     bf.add("Hello");
     bf.add("World");
