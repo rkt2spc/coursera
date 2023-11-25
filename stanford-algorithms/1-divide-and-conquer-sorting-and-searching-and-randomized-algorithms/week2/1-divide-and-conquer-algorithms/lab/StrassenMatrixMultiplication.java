@@ -119,17 +119,17 @@ public class StrassenMatrixMultiplication {
       SquareMatrix B22 = b.subMatrix(n / 2, n / 2, n / 2);
 
       SquareMatrix P1 = multiply(add(A11, A22), add(B11, B22));
-			SquareMatrix P2 = multiply(add(A21, A22), B11);
-			SquareMatrix P3 = multiply(A11, subtract(B12, B22));
-			SquareMatrix P4 = multiply(A22, subtract(B21, B11));
-			SquareMatrix P5 = multiply(add(A11, A12), B22);
-			SquareMatrix P6 = multiply(subtract(A21, A11), add(B11, B12));
-			SquareMatrix P7 = multiply(subtract(A12, A22), add(B21, B22));
+      SquareMatrix P2 = multiply(add(A21, A22), B11);
+      SquareMatrix P3 = multiply(A11, subtract(B12, B22));
+      SquareMatrix P4 = multiply(A22, subtract(B21, B11));
+      SquareMatrix P5 = multiply(add(A11, A12), B22);
+      SquareMatrix P6 = multiply(subtract(A21, A11), add(B11, B12));
+      SquareMatrix P7 = multiply(subtract(A12, A22), add(B21, B22));
 
       SquareMatrix C11 = add(subtract(add(P1, P4), P5), P7);
-			SquareMatrix C12 = add(P3, P5);
-			SquareMatrix C21 = add(P2, P4);
-			SquareMatrix C22 = add(subtract(add(P1, P3), P2), P6);
+      SquareMatrix C12 = add(P3, P5);
+      SquareMatrix C21 = add(P2, P4);
+      SquareMatrix C22 = add(subtract(add(P1, P3), P2), P6);
 
       result.rangeCopy(0, 0, C11);
       result.rangeCopy(0, n / 2, C12);
